@@ -17,18 +17,22 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping(path = "/add")
-    public String add(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
-        return employeeService.addEmployee(firstName, lastName);
+    @GetMapping("/add")
+    public String add(@RequestParam String firstName, @RequestParam String lastName) {
+        return getResult("#5511AA", employeeService.addEmployee(lastName, firstName), "успешно создан");
     }
 
-    @GetMapping(path = "/find")
-    public Employee find(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws ValueNotFoundException {
+    @GetMapping( "/find")
+    public Employee find(@RequestParam String firstName, @RequestParam String lastName) {
         return employeeService.findEmployee(lastName, firstName);
     }
 
-    @GetMapping(path = "/remove")
-    public String remove(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws ValueNotFoundException {
-        return employeeService.removeEmployee(lastName, firstName);
+    @GetMapping( "/remove")
+    public String remove(@RequestParam String firstName, @RequestParam String lastName) {
+        return getResult("#FF00AA", employeeService.removeEmployee(lastName, firstName), "удален");
+    }
+
+    private String getResult(String color, Employee employee, String action){
+        return String.format("<B  style=\"color:%s\"> %s %s  %s  </b>", color, "Сотрудник ", employee.getFullName(), action);
     }
 }

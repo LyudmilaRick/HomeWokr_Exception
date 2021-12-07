@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
  * имплементация
  */
 @Service
-public class EmployeeServiceImpl implements iEmployeeService {
+public class EmployeeServiceImpl implements IEmployeeService {
     // Массив, выполняющий роль хранилища для записей о сотрудниках.
     private final Employee[] employees = new Employee[5];
 
@@ -21,62 +21,69 @@ public class EmployeeServiceImpl implements iEmployeeService {
 
     /**
      * метод добавления сотрудника
+     *
      * @param lastName
      * @param firstName
      * @return строку как итог успешного добавления
      */
-    public String addEmployee(String lastName, String firstName) {
-
+    public Employee addEmployee(String lastName, String firstName) {
+        Employee employee = new Employee(lastName, firstName);
         for (int i = 0; i < employees.length; i++) {
             if (employees[i] == null) {
-                employees[i] = new Employee(lastName, firstName);
-                return "<i  style=\"color:#0000FF\"> Сотрудник " + employees[i].getFullName() + " успешно создан<i>";
+                employees[i] = employee;
+                return employees[i];
             }
         }
-        throw new ArrayOverflowException();
+        throw new ArrayOverflowException("Department is full");
     }
 
     /**
      * поиск сотрудника по имени и фвмилии
+     *
      * @param lastName
      * @param firstName
      * @return должен вернуться объект !!! ( согласно ДЗ )
-     * @throws ValueNotFoundException
+     * @throws EmployeeNotFoundException
      */
-    public Employee findEmployee(String lastName, String firstName) throws ValueNotFoundException {
+    public Employee findEmployee(String lastName, String firstName) {
         Employee employee = new Employee(lastName, firstName);
         int index = searchRecord(employee);
-        return employees[index];
+        if (index == -1) {
+            throw new EmployeeNotFoundException("Employee not found...today");
+        } else {
+            return employee;
+        }
     }
 
     /**
-     *
      * @param fullName
      * @return индекс в массиве
-     * @throws ValueNotFoundException если такой сотрудник отсутствует
+     * @throws EmployeeNotFoundException если такой сотрудник отсутствует
      */
-    private int searchRecord(Employee fullName) throws ValueNotFoundException {
+    private int searchRecord(Employee fullName) throws EmployeeNotFoundException {
         //поиск по индексу
         for (int i = 0; i < employees.length; i++) {
             if (employees[i] != null && employees[i].getFullName().equals(fullName.getFullName())) {
                 return i;
             }
         }
-        throw new ValueNotFoundException();
+        return -1;
     }
 
     /**
-     *
      * @param lastName
      * @param firstName
      * @return строка сообщения об удаление
-     * @throws ValueNotFoundException если такой сотрудник отсутствует
+     * @throws EmployeeNotFoundException если такой сотрудник отсутствует
      */
-    public String removeEmployee(String lastName, String firstName) throws ValueNotFoundException {
+    public Employee removeEmployee(String lastName, String firstName) {
         Employee employee = new Employee(lastName, firstName);
         int index = searchRecord(employee);
-        String name = employees[index].getFullName();
-        employees[index] = null;
-        return "<i  style=\"color:#0000FF\"> Сотрудник " + name + " удален<i>";
+        if (index == -1) {
+            throw new EmployeeNotFoundException("Employee not found for deleting");
+        } else {
+            employees[index] = null;
+            return employee;
+        }
     }
 }

@@ -1,9 +1,10 @@
 package pro.sky.java.course2.homewokr_exception;
 
-public interface iEmployeeService {
-    String addEmployee(String lastName, String firstName);
+    public interface IEmployeeService {
 
-    Employee findEmployee(String lastName, String firstName) throws ValueNotFoundException;
+        Employee addEmployee(String lastName, String firstName);
 
-    String removeEmployee(String lastName, String firstName) throws ValueNotFoundException;
+        Employee findEmployee(String lastName, String firstName);
+
+        Employee removeEmployee(String lastName, String firstName);
 }
