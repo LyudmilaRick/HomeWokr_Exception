@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
-    private final EmployeeServiceImpl employeeService;
+    private final IEmployeeService employeeService;
 
     public EmployeeController(EmployeeServiceImpl employeeService) {
         this.employeeService = employeeService;
